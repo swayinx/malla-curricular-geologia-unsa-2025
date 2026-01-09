@@ -187,30 +187,44 @@ h3 {
     color: #000;
 }
 
-/* Floating Credits Counter */
+/* Floating Credits Counter - HUD Style */
 #credits-floating {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: var(--card-bg);
-    border: 2px solid var(--accent);
-    padding: 15px 25px;
-    border-radius: 50px;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(30, 30, 30, 0.95);
+    border: 1px solid var(--accent);
+    padding: 10px 20px;
+    border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.5);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    transition: transform 0.2s;
+    backdrop-filter: blur(5px);
+    min-width: 100px;
+    overflow: hidden;
+}
+
+/* Optional: Progress bar background */
+#credits-floating::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 4px;
+    background-color: var(--accent);
+    width: var(--progress, 0%);
+    transition: width 0.3s ease;
 }
 
 #credits-floating:hover {
-    transform: scale(1.05);
+    transform: translateY(2px);
 }
 
 .credits-label {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--text-muted);
@@ -218,22 +232,25 @@ h3 {
 }
 
 #total-credits {
-    font-size: 1.8rem;
+    font-size: 1.5rem;
     font-weight: bold;
     color: var(--accent);
     line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
 }
 
 @media (max-width: 768px) {
     .semesters-container {
         flex-direction: column;
     }
+    /* On mobile, maybe keep it bottom right or make it smaller top right? 
+       Top right might cover the select if not careful. Let's move select slightly or adjust. */
     #credits-floating {
+        top: auto;
         bottom: 20px;
         right: 20px;
-        padding: 10px 20px;
-    }
-    #total-credits {
-        font-size: 1.5rem;
+        padding: 8px 16px;
     }
 }

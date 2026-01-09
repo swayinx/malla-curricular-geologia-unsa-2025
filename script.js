@@ -64,19 +64,22 @@ function updateAvailability() {
 }
 
 function updateTotalCredits() {
+    let current = 0;
     let total = 0;
+    
     courses.forEach(c => {
+        total += c.credits;
         if (courseStates[c.id] && courseStates[c.id].completed) {
-            total += c.credits;
+            current += c.credits;
         }
     });
     
-    // Animation effect for number change
-    const currentVal = parseInt(creditsDisplay.innerText);
-    if (currentVal !== total) {
-        creditsDisplay.innerText = total;
-        // Simple pulse animation could be added via CSS class toggling here if desired
-    }
+    // Update text
+    creditsDisplay.innerHTML = `${current} <span style="font-size:0.6em; opacity:0.7">/ ${total}</span>`;
+    
+    // Add visual progress class
+    const percentage = total > 0 ? (current / total) * 100 : 0;
+    creditsDisplay.style.setProperty('--progress', `${percentage}%`);
 }
 
 function uncheckDependents(courseId) {
