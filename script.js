@@ -82,30 +82,30 @@ function updateAvailability() {
 
 function updateTotalCredits() {
     let current = 0;
-    let total = 0;
+    // Standard credits for graduation usually around 220 for 5-year engineering programs in Peru (UNSA)
+    // If exact number is needed, it can be adjusted here.
+    const graduationGoal = 220; 
     
     courses.forEach(c => {
-        total += c.credits;
         if (courseStates[c.id] && courseStates[c.id].completed) {
             current += c.credits;
         }
     });
     
-    // Calculate percentage
-    const percentage = total > 0 ? (current / total) * 100 : 0;
+    // Calculate percentage based on goal
+    const percentage = (current / graduationGoal) * 100;
     
     // Update text
-    // If completed (or very close, >99%), show success message
-    if (percentage >= 100) {
-        creditsDisplay.innerHTML = `<div>🎓 ¡EGRESADO!</div><div style="font-size:0.6em; margin-top:5px">${current} / ${total}</div>`;
+    if (current >= graduationGoal) {
+        creditsDisplay.innerHTML = `<div>🎓 ¡EGRESADO!</div><div style="font-size:0.6em; margin-top:5px">${current} / ${graduationGoal}</div>`;
         document.getElementById('credits-floating').classList.add('success');
     } else {
-        creditsDisplay.innerHTML = `${current} <span style="font-size:0.6em; opacity:0.7">/ ${total}</span>`;
+        creditsDisplay.innerHTML = `${current} <span style="font-size:0.6em; opacity:0.7">/ ${graduationGoal}</span>`;
         document.getElementById('credits-floating').classList.remove('success');
     }
     
-    // Update progress bar width
-    creditsDisplay.style.setProperty('--progress', `${percentage}%`);
+    // Update progress bar width (capped at 100%)
+    creditsDisplay.style.setProperty('--progress', `${Math.min(percentage, 100)}%`);
 }
 
 function uncheckDependents(courseId) {
