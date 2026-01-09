@@ -1,10 +1,10 @@
-
 // Current active plan
 let currentPlan = '2025';
-let courses = []; // Will hold the array of courses for current plan
+let courses = []; 
 let courseStates = {};
 
 const selector = document.getElementById('plan-selector');
+const creditsDisplay = document.getElementById('total-credits');
 
 selector.addEventListener('change', (e) => {
     currentPlan = e.target.value;
@@ -13,6 +13,8 @@ selector.addEventListener('change', (e) => {
 
 function loadPlan(planKey) {
     // curriculumData is global from data.js
+    if (!curriculumData[planKey]) return; // Safety check
+
     courses = curriculumData[planKey];
     
     // Reset states object
@@ -39,6 +41,7 @@ function loadPlan(planKey) {
     }
 
     updateAvailability();
+    updateTotalCredits();
     render();
 }
 
@@ -51,8 +54,6 @@ function updateAvailability() {
         if (course.prereqs.length === 0) {
             isAvailable = true;
         } else {
-            // Check if ALL prereqs are completed
-            // Also need to check if the prereq actually exists in this plan (just in case of data errors)
             isAvailable = course.prereqs.every(pid => courseStates[pid] && courseStates[pid].completed);
         }
 
@@ -60,6 +61,22 @@ function updateAvailability() {
         if (prevState !== isAvailable) changed = true;
     });
     return changed;
+}
+
+function updateTotalCredits() {
+    let total = 0;
+    courses.forEach(c => {
+        if (courseStates[c.id] && courseStates[c.id].completed) {
+            total += c.credits;
+        }
+    });
+    
+    // Animation effect for number change
+    const currentVal = parseInt(creditsDisplay.innerText);
+    if (currentVal !== total) {
+        creditsDisplay.innerText = total;
+        // Simple pulse animation could be added via CSS class toggling here if desired
+    }
 }
 
 function uncheckDependents(courseId) {
@@ -83,6 +100,7 @@ function toggleCourse(id) {
     }
 
     updateAvailability();
+    updateTotalCredits();
     saveState();
     render();
 }
