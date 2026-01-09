@@ -4,9 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malla Curricular - Ingeniería Geológica UNSA</title>
-    <link rel="stylesheet" href="style.css?v=3">
+    <link rel="stylesheet" href="style.css?v=6">
 </head>
 <body>
+
+    <!-- Prerequisite Alert Modal (Al inicio para evitar errores de posicionamiento) -->
+    <div id="prereq-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h3>🔒 Curso Bloqueado</h3>
+            <p>Para llevar esta asignatura necesitas aprobar:</p>
+            <ul id="missing-list">
+                <!-- List injected by JS -->
+            </ul>
+        </div>
+    </div>
 
     <header>
         <h1>Ingeniería Geológica UNSA</h1>
@@ -35,19 +47,7 @@
         <span id="total-credits">0</span>
     </div>
 
-    <!-- Prerequisite Alert Modal -->
-    <div id="prereq-modal" class="modal-overlay">
-        <div class="modal-content">
-            <span class="close-btn" id="close-modal">&times;</span>
-            <h3>🔒 Curso Bloqueado</h3>
-            <p>Para llevar esta asignatura necesitas aprobar:</p>
-            <ul id="missing-list">
-                <!-- List injected by JS -->
-            </ul>
-        </div>
-    </div>
-
-    <script src="data.js?v=5"></script>
-    <script src="script.js?v=5"></script>
+    <script src="data.js?v=6"></script>
+    <script src="script.js?v=6"></script>
 </body>
 </html>
