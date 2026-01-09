@@ -35,7 +35,19 @@
         <span id="total-credits">0</span>
     </div>
 
-    <script src="data.js?v=3"></script>
-    <script src="script.js?v=3"></script>
+    <!-- Prerequisite Alert Modal -->
+    <div id="prereq-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-btn" id="close-modal">&times;</span>
+            <h3>🔒 Curso Bloqueado</h3>
+            <p>Para llevar esta asignatura necesitas aprobar:</p>
+            <ul id="missing-list">
+                <!-- List injected by JS -->
+            </ul>
+        </div>
+    </div>
+
+    <script src="data.js?v=4"></script>
+    <script src="script.js?v=4"></script>
 </body>
 </html>

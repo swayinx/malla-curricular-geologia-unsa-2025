@@ -6,6 +6,9 @@ let courseStates = {};
 const selector = document.getElementById('plan-selector');
 const creditsDisplay = document.getElementById('total-credits');
 const resetBtn = document.getElementById('reset-btn');
+const modal = document.getElementById('prereq-modal');
+const closeModal = document.getElementById('close-modal');
+const missingList = document.getElementById('missing-list');
 
 selector.addEventListener('change', (e) => {
     currentPlan = e.target.value;
@@ -17,6 +20,45 @@ resetBtn.addEventListener('click', () => {
         resetProgress();
     }
 });
+
+// Modal Logic
+closeModal.addEventListener('click', () => {
+    modal.classList.remove('visible');
+});
+
+// Close when clicking outside content
+modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+        modal.classList.remove('visible');
+    }
+});
+
+function showMissingPrereqs(courseId) {
+    const course = courses.find(c => c.id === courseId);
+    if (!course) return;
+
+    const missing = course.prereqs.filter(pid => !courseStates[pid] || !courseStates[pid].completed);
+    
+    missingList.innerHTML = '';
+    
+    if (missing.length === 0) {
+        // Should not happen if locked, but safety check
+        missingList.innerHTML = '<li>Error desconocido. Contacta al administrador.</li>';
+    } else {
+        missing.forEach(pid => {
+            const prereqCourse = courses.find(c => c.id === pid);
+            const li = document.createElement('li');
+            if (prereqCourse) {
+                li.innerHTML = `<strong>${prereqCourse.id}</strong> ${prereqCourse.name}`;
+            } else {
+                li.innerHTML = `<strong>${pid}</strong> (Curso no encontrado en este plan)`;
+            }
+            missingList.appendChild(li);
+        });
+    }
+    
+    modal.classList.add('visible');
+}
 
 function resetProgress() {
     courses.forEach(c => {
@@ -123,7 +165,12 @@ function uncheckDependents(courseId) {
 
 function toggleCourse(id) {
     const state = courseStates[id];
-    if (!state.available && !state.completed) return; 
+    
+    // If locked, show modal
+    if (!state.available && !state.completed) {
+        showMissingPrereqs(id);
+        return;
+    }
 
     state.completed = !state.completed;
 
