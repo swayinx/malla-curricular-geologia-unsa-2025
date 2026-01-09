@@ -53,6 +53,10 @@ h1 {
 
 .controls {
     margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
 }
 
 select {
@@ -63,6 +67,21 @@ select {
     border: 1px solid #555;
     font-size: 1rem;
     cursor: pointer;
+}
+
+.btn-reset {
+    background-color: #c62828; /* Red */
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.btn-reset:hover {
+    background-color: #d32f2f;
 }
 
 #curriculum-container {

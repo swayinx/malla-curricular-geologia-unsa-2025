@@ -5,11 +5,28 @@ let courseStates = {};
 
 const selector = document.getElementById('plan-selector');
 const creditsDisplay = document.getElementById('total-credits');
+const resetBtn = document.getElementById('reset-btn');
 
 selector.addEventListener('change', (e) => {
     currentPlan = e.target.value;
     loadPlan(currentPlan);
 });
+
+resetBtn.addEventListener('click', () => {
+    if (confirm('¿Estás seguro de que quieres desmarcar todo?')) {
+        resetProgress();
+    }
+});
+
+function resetProgress() {
+    courses.forEach(c => {
+        courseStates[c.id].completed = false;
+    });
+    updateAvailability();
+    updateTotalCredits();
+    saveState();
+    render();
+}
 
 function loadPlan(planKey) {
     // curriculumData is global from data.js
