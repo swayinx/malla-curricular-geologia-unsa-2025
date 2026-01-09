@@ -655,9 +655,7 @@ const curriculumData = {
       "id": "1705166",
       "name": "SEMINARIO DE TESIS (E)",
       "credits": 3,
-      "prereqs": [
-        "1703195"
-      ],
+      "prereqs": [],
       "year": "QUINTO A\u00d1O",
       "semester": "PRIMER SEMESTRE"
     },

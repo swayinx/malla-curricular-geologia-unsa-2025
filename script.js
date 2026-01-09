@@ -82,9 +82,12 @@ function updateAvailability() {
 
 function updateTotalCredits() {
     let current = 0;
-    // Standard credits for graduation usually around 220 for 5-year engineering programs in Peru (UNSA)
-    // If exact number is needed, it can be adjusted here.
-    const graduationGoal = 220; 
+    // Specific graduation goals provided by the user
+    const goals = {
+        '2017': 223,
+        '2025': 238
+    };
+    const graduationGoal = goals[currentPlan] || 220; 
     
     courses.forEach(c => {
         if (courseStates[c.id] && courseStates[c.id].completed) {
