@@ -219,6 +219,30 @@ h3 {
     transition: width 0.3s ease;
 }
 
+/* Success State for Counter */
+#credits-floating.success {
+    background-color: rgba(46, 125, 50, 0.95); /* Green background */
+    border-color: #00e676;
+    box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#credits-floating.success #total-credits {
+    color: white;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+#credits-floating.success::before {
+    background-color: #00e676;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.8); }
+    100% { transform: scale(1); }
+}
+
 #credits-floating:hover {
     transform: translateY(2px);
 }

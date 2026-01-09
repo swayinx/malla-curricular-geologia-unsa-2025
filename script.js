@@ -74,11 +74,20 @@ function updateTotalCredits() {
         }
     });
     
-    // Update text
-    creditsDisplay.innerHTML = `${current} <span style="font-size:0.6em; opacity:0.7">/ ${total}</span>`;
-    
-    // Add visual progress class
+    // Calculate percentage
     const percentage = total > 0 ? (current / total) * 100 : 0;
+    
+    // Update text
+    // If completed (or very close, >99%), show success message
+    if (percentage >= 100) {
+        creditsDisplay.innerHTML = `<div>🎓 ¡EGRESADO!</div><div style="font-size:0.6em; margin-top:5px">${current} / ${total}</div>`;
+        document.getElementById('credits-floating').classList.add('success');
+    } else {
+        creditsDisplay.innerHTML = `${current} <span style="font-size:0.6em; opacity:0.7">/ ${total}</span>`;
+        document.getElementById('credits-floating').classList.remove('success');
+    }
+    
+    // Update progress bar width
     creditsDisplay.style.setProperty('--progress', `${percentage}%`);
 }
 
