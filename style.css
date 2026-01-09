@@ -4,7 +4,7 @@
     --card-bg-locked: #2c2c2c;
     --text-main: #e0e0e0;
     --text-muted: #a0a0a0;
-    --accent: #e67e22; /* Orange-ish for Geology */
+    --accent: #e67e22;
     --accent-dim: #5d3513;
     --border: #333;
     --completed-bg: #3e2714;
@@ -70,7 +70,7 @@ select {
 }
 
 .btn-reset {
-    background-color: #c62828; /* Red */
+    background-color: #c62828;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -88,7 +88,7 @@ select {
     max-width: 1400px;
     margin: 20px auto;
     padding: 0 20px;
-    padding-bottom: 80px; /* Space for footer/floating element */
+    padding-bottom: 80px;
     flex: 1;
 }
 
@@ -224,9 +224,9 @@ h3 {
     backdrop-filter: blur(5px);
     min-width: 100px;
     overflow: hidden;
+    transition: transform 0.2s ease;
 }
 
-/* Optional: Progress bar background */
 #credits-floating::before {
     content: '';
     position: absolute;
@@ -238,9 +238,8 @@ h3 {
     transition: width 0.3s ease;
 }
 
-/* Success State for Counter */
 #credits-floating.success {
-    background-color: rgba(46, 125, 50, 0.95); /* Green background */
+    background-color: rgba(46, 125, 50, 0.95);
     border-color: #00e676;
     box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
     animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -274,9 +273,14 @@ h3 {
     margin-bottom: 2px;
 }
 
-    #total-credits {
-        font-size: 1.5rem;
-    }
+#total-credits {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent);
+    line-height: 1;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
 }
 
 /* Modal Styles */
@@ -286,7 +290,7 @@ h3 {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Dimmed background */
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -336,7 +340,7 @@ h3 {
 }
 
 .modal-content h3 {
-    color: #e74c3c; /* Red for alert */
+    color: #e74c3c;
     margin-top: 0;
     margin-bottom: 15px;
     text-align: left;
@@ -375,16 +379,31 @@ h3 {
     margin-bottom: 2px;
 }
 
+/* Shake Animation */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); border-color: #e74c3c; }
+  40% { transform: translateX(5px); border-color: #e74c3c; }
+  60% { transform: translateX(-5px); border-color: #e74c3c; }
+  80% { transform: translateX(5px); border-color: #e74c3c; }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s ease-in-out;
+}
+
 @media (max-width: 768px) {
     .semesters-container {
         flex-direction: column;
     }
-    /* On mobile, maybe keep it bottom right or make it smaller top right? 
-       Top right might cover the select if not careful. Let's move select slightly or adjust. */
     #credits-floating {
         top: auto;
         bottom: 20px;
         right: 20px;
         padding: 8px 16px;
+    }
+    #total-credits {
+        font-size: 1.5rem;
     }
 }

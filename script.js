@@ -1,3 +1,4 @@
+
 // Current active plan
 let currentPlan = '2025';
 let courses = []; 
@@ -26,60 +27,19 @@ closeModal.addEventListener('click', () => {
     modal.classList.remove('visible');
 });
 
-// Close when clicking outside content
 modal.addEventListener('click', (e) => {
     if (e.target === modal) {
         modal.classList.remove('visible');
     }
 });
 
-function showMissingPrereqs(courseId) {
-    const course = courses.find(c => c.id === courseId);
-    if (!course) return;
-
-    const missing = course.prereqs.filter(pid => !courseStates[pid] || !courseStates[pid].completed);
-    
-    missingList.innerHTML = '';
-    
-    if (missing.length === 0) {
-        // Should not happen if locked, but safety check
-        missingList.innerHTML = '<li>Error desconocido. Contacta al administrador.</li>';
-    } else {
-        missing.forEach(pid => {
-            const prereqCourse = courses.find(c => c.id === pid);
-            const li = document.createElement('li');
-            if (prereqCourse) {
-                li.innerHTML = `<strong>${prereqCourse.id}</strong> ${prereqCourse.name}`;
-            } else {
-                li.innerHTML = `<strong>${pid}</strong> (Curso no encontrado en este plan)`;
-            }
-            missingList.appendChild(li);
-        });
-    }
-    
-    modal.classList.add('visible');
-}
-
-function resetProgress() {
-    courses.forEach(c => {
-        courseStates[c.id].completed = false;
-    });
-    updateAvailability();
-    updateTotalCredits();
-    saveState();
-    render();
-}
-
 function loadPlan(planKey) {
-    // curriculumData is global from data.js
-    if (!curriculumData[planKey]) return; // Safety check
+    if (!curriculumData[planKey]) return; 
 
     courses = curriculumData[planKey];
     
-    // Reset states object
     courseStates = {};
     
-    // Initialize states
     courses.forEach(c => {
         courseStates[c.id] = {
             completed: false,
@@ -87,7 +47,6 @@ function loadPlan(planKey) {
         };
     });
 
-    // Load from local storage
     const storageKey = `geology_state_${planKey}`;
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -124,7 +83,6 @@ function updateAvailability() {
 
 function updateTotalCredits() {
     let current = 0;
-    // Specific graduation goals provided by the user
     const goals = {
         '2017': 223,
         '2025': 238
@@ -137,10 +95,8 @@ function updateTotalCredits() {
         }
     });
     
-    // Calculate percentage based on goal
     const percentage = (current / graduationGoal) * 100;
     
-    // Update text
     if (current >= graduationGoal) {
         creditsDisplay.innerHTML = `<div>🎓 ¡EGRESADO!</div><div style="font-size:0.6em; margin-top:5px">${current} / ${graduationGoal}</div>`;
         document.getElementById('credits-floating').classList.add('success');
@@ -149,7 +105,6 @@ function updateTotalCredits() {
         document.getElementById('credits-floating').classList.remove('success');
     }
     
-    // Update progress bar width (capped at 100%)
     creditsDisplay.style.setProperty('--progress', `${Math.min(percentage, 100)}%`);
 }
 
@@ -166,8 +121,24 @@ function uncheckDependents(courseId) {
 function toggleCourse(id) {
     const state = courseStates[id];
     
-    // If locked, show modal
+    // If locked
     if (!state.available && !state.completed) {
+        // Find card element by ID
+        const cardElement = document.getElementById(`course-card-${id}`);
+        
+        if (cardElement) {
+            // Remove class first to reset animation if clicked quickly
+            cardElement.classList.remove('shake');
+            void cardElement.offsetWidth; // Trigger reflow
+            cardElement.classList.add('shake');
+            
+            // Show modal after a tiny delay or immediately
+            // Timeout to remove class cleanly
+            setTimeout(() => {
+                cardElement.classList.remove('shake');
+            }, 400);
+        }
+        
         showMissingPrereqs(id);
         return;
     }
@@ -184,6 +155,42 @@ function toggleCourse(id) {
     render();
 }
 
+function showMissingPrereqs(courseId) {
+    const course = courses.find(c => c.id === courseId);
+    if (!course) return;
+
+    const missing = course.prereqs.filter(pid => !courseStates[pid] || !courseStates[pid].completed);
+    
+    missingList.innerHTML = '';
+    
+    if (missing.length === 0) {
+        missingList.innerHTML = '<li>Error desconocido.</li>';
+    } else {
+        missing.forEach(pid => {
+            const prereqCourse = courses.find(c => c.id === pid);
+            const li = document.createElement('li');
+            if (prereqCourse) {
+                li.innerHTML = `<strong>${prereqCourse.id}</strong> ${prereqCourse.name}`;
+            } else {
+                li.innerHTML = `<strong>${pid}</strong> (Curso no encontrado)`;
+            }
+            missingList.appendChild(li);
+        });
+    }
+    
+    modal.classList.add('visible');
+}
+
+function resetProgress() {
+    courses.forEach(c => {
+        courseStates[c.id].completed = false;
+    });
+    updateAvailability();
+    updateTotalCredits();
+    saveState();
+    render();
+}
+
 function saveState() {
     const storageKey = `geology_state_${currentPlan}`;
     localStorage.setItem(storageKey, JSON.stringify(courseStates));
@@ -193,7 +200,6 @@ function render() {
     const container = document.getElementById('curriculum-container');
     container.innerHTML = '';
 
-    // Group by Year -> Semester
     const structure = {};
     courses.forEach(c => {
         if (!structure[c.year]) structure[c.year] = {};
@@ -225,6 +231,10 @@ function render() {
                 const state = courseStates[course.id];
                 const card = document.createElement('div');
                 card.className = `course-card ${state.completed ? 'completed' : ''} ${state.available ? 'available' : 'locked'}`;
+                
+                // Add unique ID for animation targeting
+                card.id = `course-card-${course.id}`;
+                
                 card.onclick = () => toggleCourse(course.id);
 
                 const header = document.createElement('div');
@@ -265,5 +275,4 @@ function render() {
     }
 }
 
-// Init
 loadPlan(currentPlan);
